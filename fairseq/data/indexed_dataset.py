@@ -40,7 +40,7 @@ def code(dtype):
         if dtypes[k] == dtype:
             return k
 
-
+# separated index file and data file
 def index_file_path(prefix_path):
     return prefix_path + '.idx'
 
@@ -48,7 +48,7 @@ def index_file_path(prefix_path):
 def data_file_path(prefix_path):
     return prefix_path + '.bin'
 
-
+# lua array index begin with 1
 class IndexedDataset(torch.utils.data.Dataset):
     """Loader for TorchNet IndexedDataset"""
 
@@ -68,9 +68,9 @@ class IndexedDataset(torch.utils.data.Dataset):
             code, self.element_size = struct.unpack('<QQ', f.read(16))
             self.dtype = dtypes[code]
             self.size, self.s = struct.unpack('<QQ', f.read(16))
-            self.dim_offsets = read_longs(f, self.size + 1)
-            self.data_offsets = read_longs(f, self.size + 1)
-            self.sizes = read_longs(f, self.s)
+            self.dim_offsets = read_longs(f, self.size + 1)     # dim offset. TODO: use data_offsets size to read dim_offsets??
+            self.data_offsets = read_longs(f, self.size + 1)    # data offset
+            self.sizes = read_longs(f, self.s)  # store the dims of each tensor
 
     def read_data(self, path):
         self.data_file = open(data_file_path(path), 'rb', buffering=0)

@@ -108,6 +108,8 @@ class Tokenizer:
                 line = f.readline()
         return {'nseq': nseq, 'nunk': sum(replaced.values()), 'ntok': ntok, 'replaced': replaced}
 
+    # slice the file into chunks to enable multiprocessing
+    # return the offsets of each chunk
     @staticmethod
     def find_offsets(filename, num_chunks):
         with open(filename, 'r', encoding='utf-8') as f:
